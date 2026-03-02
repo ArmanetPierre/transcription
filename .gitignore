@@ -1,0 +1,52 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Xcode
+TranscriptionApp/TranscriptionApp.xcodeproj/project.xcworkspace/xcuserdata/
+TranscriptionApp/TranscriptionApp.xcodeproj/xcuserdata/
+DerivedData/
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+
+# Build
+*.app
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Audio/test files
+*.m4a
+*.wav
+*.mp3
+*.mp4
+*.txt
+!requirements.txt
+
+# Claude
+.claude/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Backups
+*.backup
+
+# Secrets
+.env
