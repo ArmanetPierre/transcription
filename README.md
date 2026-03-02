@@ -31,7 +31,7 @@ Application macOS native (SwiftUI) de transcription audio avec identification de
 ### 1. Cloner le repo
 
 ```bash
-git clone https://github.com/VOTRE_USERNAME/transcription.git
+git clone https://github.com/ArmanetPierre/transcription.git
 cd transcription
 ```
 
