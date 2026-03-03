@@ -12,7 +12,7 @@ struct RecordingMenuBarSection: View {
                     Circle()
                         .fill(.red)
                         .frame(width: 8, height: 8)
-                    Text("Enregistrement en cours")
+                    Text("Recording in progress")
                         .font(.callout.bold())
                 }
 
@@ -26,7 +26,7 @@ struct RecordingMenuBarSection: View {
             Button {
                 recordingVM.stopAndTranscribe(listVM: listVM)
             } label: {
-                Label("Arreter et transcrire", systemImage: "stop.circle.fill")
+                Label("Stop and transcribe", systemImage: "stop.circle.fill")
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 4)
@@ -35,7 +35,7 @@ struct RecordingMenuBarSection: View {
             Button {
                 recordingVM.startRecording()
             } label: {
-                Label("Enregistrer une reunion", systemImage: "record.circle")
+                Label("Record a meeting", systemImage: "record.circle")
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 4)
@@ -58,7 +58,7 @@ struct RecordingMenuBarSection: View {
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
 
-                Button("Ouvrir Reglages Systeme") {
+                Button("Open System Settings") {
                     NSWorkspace.shared.open(
                         URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy")!
                     )

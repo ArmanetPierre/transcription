@@ -16,6 +16,6 @@ struct SpeakerBadge: View {
                     .fill(SpeakerColors.color(for: label))
             )
             .onTapGesture { onTap() }
-            .help("Cliquer pour renommer")
+            .help("Click to rename")
     }
 }

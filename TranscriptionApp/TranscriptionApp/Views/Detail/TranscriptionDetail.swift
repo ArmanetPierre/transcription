@@ -78,17 +78,17 @@ struct TranscriptionDetail: View {
                         Button {
                             viewModel.regenerateAll(project: project)
                         } label: {
-                            Label("Regenerer", systemImage: "arrow.clockwise")
+                            Label("Regenerate", systemImage: "arrow.clockwise")
                         }
-                        .help("Regenerer le compte rendu et les syntheses avec Ollama")
+                        .help("Regenerate the meeting report and summaries with Ollama")
                     } else {
                         // Pas de rapport → bouton generer
                         Button {
                             viewModel.regenerateAll(project: project)
                         } label: {
-                            Label("Compte rendu", systemImage: "brain")
+                            Label("Meeting Report", systemImage: "brain")
                         }
-                        .help("Generer le compte rendu et les syntheses avec Ollama")
+                        .help("Generate the meeting report and summaries with Ollama")
                     }
 
                     Menu {
@@ -98,7 +98,7 @@ struct TranscriptionDetail: View {
                             }
                         }
                     } label: {
-                        Label("Exporter", systemImage: "square.and.arrow.up")
+                        Label("Export", systemImage: "square.and.arrow.up")
                     }
                 }
             }
@@ -131,7 +131,7 @@ struct TranscriptionDetail: View {
     private var header: some View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
-                TextField("Titre", text: $project.title)
+                TextField("Title", text: $project.title)
                     .font(.title2.bold())
                     .textFieldStyle(.plain)
 
@@ -149,7 +149,7 @@ struct TranscriptionDetail: View {
                         Label("\(project.segments.count) segments", systemImage: "text.alignleft")
                     }
                     if let processingTime = project.totalProcessingDurationSec {
-                        Label("Traite en \(TimeFormatting.durationText(processingTime))", systemImage: "bolt")
+                        Label("Processed in \(TimeFormatting.durationText(processingTime))", systemImage: "bolt")
                     }
                 }
                 .font(.caption)
@@ -176,9 +176,9 @@ struct TranscriptionDetail: View {
 
     private var errorView: some View {
         ContentUnavailableView {
-            Label("Erreur", systemImage: "exclamationmark.triangle")
+            Label("Error", systemImage: "exclamationmark.triangle")
         } description: {
-            Text(project.errorMessage ?? "Erreur inconnue")
+            Text(project.errorMessage ?? String(localized: "Unknown error"))
         }
     }
 
@@ -186,9 +186,9 @@ struct TranscriptionDetail: View {
 
     private var emptySegmentsView: some View {
         ContentUnavailableView {
-            Label("Aucun segment", systemImage: "text.alignleft")
+            Label("No segments", systemImage: "text.alignleft")
         } description: {
-            Text("La transcription n'a produit aucun segment.\nEssayez de reimporter le fichier audio.")
+            Text("The transcription produced no segments.\nTry reimporting the audio file.")
         }
     }
 
@@ -222,7 +222,7 @@ struct TranscriptionDetail: View {
                 ForEach(project.sortedSegments, id: \.id) { segment in
                     SegmentRow(
                         segment: segment,
-                        speakerDisplayName: project.displayName(for: segment.speakerLabel ?? "Inconnu"),
+                        speakerDisplayName: project.displayName(for: segment.speakerLabel ?? "Unknown"),
                         isPlaying: isSegmentPlaying(segment),
                         onSeek: { viewModel.seekToSegment(segment) },
                         onRenameSpeaker: { newName in

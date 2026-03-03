@@ -26,7 +26,7 @@ struct ProgressOverlay: View {
                             .progressViewStyle(.linear)
                             .frame(width: 300)
 
-                        Text("Telechargement du modele \(ollama.pullModelName ?? "")... \(Int(ollama.pullProgress * 100))%")
+                        Text("Downloading model \(ollama.pullModelName ?? "")... \(Int(ollama.pullProgress * 100))%")
                             .font(.callout)
                             .foregroundStyle(.secondary)
                     }
@@ -36,7 +36,7 @@ struct ProgressOverlay: View {
                         .progressViewStyle(.circular)
                         .controlSize(.large)
 
-                    Text("Analyse des interventions avec Ollama...")
+                    Text("Analyzing contributions with Ollama...")
                         .font(.callout)
                         .foregroundStyle(.secondary)
                 }
@@ -59,7 +59,7 @@ struct ProgressOverlay: View {
             }
 
             if project.status == .pending {
-                Text("En attente de traitement...")
+                Text("Waiting to process...")
                     .foregroundStyle(.secondary)
             }
 

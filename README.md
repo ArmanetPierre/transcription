@@ -1,120 +1,138 @@
-# Transcription
+# Voxa
 
-Application macOS native (SwiftUI) de transcription audio avec identification des interlocuteurs (diarisation) et generation automatique de comptes rendus de reunion.
+Native macOS application (SwiftUI) for audio transcription with speaker identification (diarization), meeting recording, and automatic meeting report generation.
 
 ![macOS](https://img.shields.io/badge/macOS-14.0%2B-blue)
 ![Swift](https://img.shields.io/badge/Swift-5.9-orange)
 ![Python](https://img.shields.io/badge/Python-3.11-green)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
-## Fonctionnalites
+## Features
 
-- **Transcription audio** via [mlx-whisper](https://github.com/ml-explore/mlx-examples/tree/main/whisper) (optimise GPU Apple Silicon)
-- **Diarisation** (identification des speakers) via [pyannote.audio](https://github.com/pyannote/pyannote-audio) 3.1
-- **Syntheses par speaker** et **comptes rendus de reunion** via [Ollama](https://ollama.com) (LLM local)
-- **Export** en TXT, JSON, SRT, Markdown
-- **Barre de menu** avec progression en temps reel
-- **Lecteur audio** integre avec navigation par segment
-- Glisser-deposer de fichiers audio (m4a, wav, mp3, mp4...)
+- **Audio transcription** via [mlx-whisper](https://github.com/ml-explore/mlx-examples/tree/main/whisper) (Apple Silicon GPU optimized)
+- **Diarization** (speaker identification) via [pyannote.audio](https://github.com/pyannote/pyannote-audio) 3.1
+- **Meeting recording** with system audio + microphone capture (ScreenCaptureKit)
+- **Speaker summaries** and **meeting reports** via [Ollama](https://ollama.com) (local LLM)
+- **Export** to TXT, JSON, SRT, Markdown
+- **Menu bar** with real-time progress tracking
+- **Built-in audio player** with segment navigation
+- **Multilingual** — adapts to your Mac's language (English / French)
+- Drag & drop audio files (m4a, wav, mp3, mp4...)
 
-## Prerequis
+## Prerequisites
 
-- macOS 14.0+ (Sonoma) sur Apple Silicon (M1/M2/M3/M4)
-- [Xcode](https://developer.apple.com/xcode/) 16+
-- Python 3.11+
-- [ffmpeg](https://ffmpeg.org/) (`brew install ffmpeg`)
-- [Ollama](https://ollama.com) (optionnel, pour les syntheses LLM)
-- Un token [HuggingFace](https://huggingface.co/settings/tokens) (pour les modeles pyannote)
+- macOS 14.0+ (Sonoma) on Apple Silicon (M1/M2/M3/M4)
+- Python 3.11+ (`brew install python@3.12` or [python.org](https://www.python.org/downloads/))
+- A [HuggingFace](https://huggingface.co/settings/tokens) token (for pyannote diarization models)
 
 ## Installation
 
-### 1. Cloner le repo
+### Quick Install (recommended)
+
+1. Download `Voxa.dmg` from [Releases](https://github.com/ArmanetPierre/transcription/releases)
+2. Open the DMG and drag **Voxa** to **Applications**
+3. Launch Voxa — the setup wizard will guide you through the rest
+4. Enter your HuggingFace token when prompted
+
+> **Note:** On first launch, macOS may warn about an unidentified developer. Right-click the app → **Open** to bypass Gatekeeper.
+
+The setup wizard automatically:
+- Detects your Python installation
+- Creates a dedicated Python environment in `~/Library/Application Support/Voxa/`
+- Installs all required ML packages (mlx-whisper, pyannote, torch...)
+- This takes 5-10 minutes on first launch depending on your internet connection
+
+> **Note:** You must accept the terms of use for pyannote models on HuggingFace:
+> - [pyannote/segmentation-3.0](https://huggingface.co/pyannote/segmentation-3.0)
+> - [pyannote/speaker-diarization-3.1](https://huggingface.co/pyannote/speaker-diarization-3.1)
+
+### Optional: FFmpeg
+
+FFmpeg improves audio format compatibility. Install with:
+
+```bash
+brew install ffmpeg
+```
+
+### Optional: Ollama
+
+For AI-powered meeting summaries and speaker synthesis:
+
+1. Install [Ollama](https://ollama.com)
+2. Pull a model:
+
+```bash
+ollama pull llama3.1:8b
+```
+
+## Usage
+
+### Transcription
+
+1. **Drag** an audio file into the import zone (or use File → Import)
+2. **Transcription** starts automatically (progress shown in menu bar)
+3. Once complete, **identify speakers** by giving them names
+4. **Generate summaries** with Ollama (brain icon)
+5. **Export** the result in your preferred format
+
+### Meeting Recording
+
+1. Click **Record a meeting** in the menu bar
+2. Voxa captures both **system audio** (other participants) and your **microphone**
+3. Click **Stop and transcribe** to end recording
+4. The recording is automatically transcribed
+
+## Build from source
 
 ```bash
 git clone https://github.com/ArmanetPierre/transcription.git
 cd transcription
 ```
 
-### 2. Environnement Python
+Open `TranscriptionApp/TranscriptionApp.xcodeproj` in Xcode, then Build & Run (Cmd+R).
+
+To build the DMG:
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
+./scripts/build-dmg.sh
 ```
-
-> **Note :** Acceptez les conditions d'utilisation des modeles pyannote sur HuggingFace :
-> - [pyannote/segmentation-3.0](https://huggingface.co/pyannote/segmentation-3.0)
-> - [pyannote/speaker-diarization-3.1](https://huggingface.co/pyannote/speaker-diarization-3.1)
-
-### 3. ffmpeg
-
-```bash
-brew install ffmpeg
-```
-
-### 4. Ollama (optionnel)
-
-```bash
-brew install ollama
-ollama pull llama3.1:8b
-```
-
-### 5. Compiler l'app
-
-Ouvrir `TranscriptionApp/TranscriptionApp.xcodeproj` dans Xcode, puis Build & Run (Cmd+R).
-
-## Configuration
-
-Au premier lancement, ouvrez les **Preferences** (Cmd+,) pour configurer :
-
-| Parametre | Description |
-|---|---|
-| **Token HuggingFace** | Requis pour la diarisation (modeles pyannote) |
-| **Chemin Python** | Chemin vers le binaire Python du venv (ex: `.venv/bin/python`) |
-| **Chemin Script** | Chemin vers `transcribe_bridge.py` |
-| **Modele Whisper** | `large-v3-turbo` (recommande), `large-v3`, `medium`, `small`, `base`, `tiny` |
-| **Modele Ollama** | `llama3.1:8b` (recommande), `mistral:latest` |
-
-## Utilisation
-
-1. **Glissez** un fichier audio dans la zone d'import
-2. La **transcription** demarre automatiquement (progression dans la barre de menu)
-3. Une fois terminee, **identifiez les speakers** en leur donnant des noms
-4. **Generez les syntheses** avec Ollama (bouton cerveau)
-5. **Exportez** le resultat dans le format souhaite
 
 ## Architecture
 
 ```
-transcription/
-├── transcribe_bridge.py      # Script Python (protocole JSON Lines)
-├── transcribe.py             # Script CLI standalone
-├── requirements.txt          # Dependances Python
-└── TranscriptionApp/         # Application SwiftUI
-    └── TranscriptionApp/
-        ├── Models/           # SwiftData models, enums
-        ├── Services/         # PythonBridge, OllamaService, AudioService
-        ├── ViewModels/       # TranscriptionListVM, TranscriptionDetailVM
-        ├── Views/            # SwiftUI views (Detail, Sidebar, Import, MenuBar)
-        └── Utilities/        # EstimationService, SpeakerColors, TimeFormatting
+TranscriptionApp/
+└── TranscriptionApp/
+    ├── Models/           # SwiftData models, enums
+    ├── Services/         # PythonBridge, DependencyManager, OllamaService, RecordingService
+    ├── ViewModels/       # TranscriptionListVM, RecordingVM
+    ├── Views/            # SwiftUI views (SetupView, Detail, Sidebar, Import, MenuBar)
+    ├── Utilities/        # EstimationService, SpeakerColors, TimeFormatting
+    └── Resources/        # Bundled Python scripts, localizations
 ```
 
-### Communication Swift ↔ Python
+### Swift ↔ Python Communication
 
-L'app Swift lance le script Python en subprocess et communique via un protocole **JSON Lines** sur stdout :
+The Swift app launches the bundled Python script as a subprocess and communicates via a **JSON Lines** protocol on stdout:
 
 ```
 Swift (PythonBridge) → Process() → transcribe_bridge.py
                      ← stdout (JSON Lines: progress, segments, diarization)
 ```
 
-## Script CLI
+### Recording Architecture
 
-Le script `transcribe.py` peut aussi etre utilise en ligne de commande :
+Voxa uses a dual-track recording approach to avoid audio echo:
+- **System audio** → ScreenCaptureKit → AVAssetWriter (.m4a)
+- **Microphone** → AVAudioEngine → AVAudioFile (.wav)
+- On stop → AVMutableComposition merges both tracks into a single .m4a file
+
+## CLI Script
+
+The `transcribe.py` script can also be used standalone from the command line:
 
 ```bash
-source .venv/bin/activate
+# Using the venv created by Voxa
+source ~/Library/Application\ Support/Voxa/.venv/bin/activate
 python transcribe.py --audio recording.m4a --model large-v3-turbo --hf-token YOUR_TOKEN
 ```
 

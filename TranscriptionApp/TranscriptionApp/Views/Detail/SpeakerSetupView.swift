@@ -14,10 +14,10 @@ struct SpeakerSetupView: View {
                         .font(.system(size: 44))
                         .foregroundStyle(.blue)
 
-                    Text("Identifier les speakers")
+                    Text("Identify Speakers")
                         .font(.title2.bold())
 
-                    Text("Ecoutez les extraits et nommez chaque intervenant")
+                    Text("Listen to samples and name each speaker")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -30,14 +30,14 @@ struct SpeakerSetupView: View {
 
                 // Actions
                 HStack {
-                    Button("Passer") {
+                    Button("Skip") {
                         viewModel.skipSpeakerNames(project: project)
                     }
                     .buttonStyle(.bordered)
 
                     Spacer()
 
-                    Button("Confirmer et continuer") {
+                    Button("Confirm and continue") {
                         // Enregistrer les noms saisis
                         for (label, name) in editedNames {
                             viewModel.renameSpeaker(in: project, label: label, newName: name)
@@ -76,7 +76,7 @@ struct SpeakerSetupView: View {
                     .font(.headline)
 
                 let segmentCount = project.sortedSegments.filter { $0.speakerLabel == speakerLabel }.count
-                Text("\(segmentCount) interventions")
+                Text("\(segmentCount) contributions")
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
@@ -87,7 +87,7 @@ struct SpeakerSetupView: View {
                     playSample(for: speakerLabel)
                 } label: {
                     Label(
-                        viewModel.audioService.isLoaded ? "Ecouter" : "Audio indisponible",
+                        viewModel.audioService.isLoaded ? "Listen" : "Audio unavailable",
                         systemImage: viewModel.audioService.isLoaded ? "play.circle.fill" : "speaker.slash"
                     )
                     .font(.callout)
@@ -115,9 +115,9 @@ struct SpeakerSetupView: View {
 
             // Champ nom
             HStack {
-                Text("Nom :")
+                Text("Name:")
                     .font(.callout)
-                TextField("Entrez le nom...", text: nameBinding(for: speakerLabel))
+                TextField("Enter name...", text: nameBinding(for: speakerLabel))
                     .textFieldStyle(.roundedBorder)
                     .frame(maxWidth: 250)
             }

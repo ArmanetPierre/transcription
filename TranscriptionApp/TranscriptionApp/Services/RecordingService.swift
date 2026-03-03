@@ -21,15 +21,15 @@ enum RecordingError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .permissionDenied(let detail):
-            "Permission refusee: \(detail)"
+            String(localized: "Permission denied: \(detail)")
         case .noDisplayAvailable:
-            "Aucun ecran disponible pour la capture audio systeme"
+            String(localized: "No display available for system audio capture")
         case .audioEngineSetupFailed(let detail):
-            "Erreur de configuration audio: \(detail)"
+            String(localized: "Audio configuration error: \(detail)")
         case .fileCreationFailed(let detail):
-            "Impossible de creer le fichier d'enregistrement: \(detail)"
+            String(localized: "Unable to create recording file: \(detail)")
         case .mergeFailed(let detail):
-            "Erreur lors de la fusion audio: \(detail)"
+            String(localized: "Audio merge error: \(detail)")
         }
     }
 }

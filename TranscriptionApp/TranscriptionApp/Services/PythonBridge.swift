@@ -8,11 +8,11 @@ enum PythonBridgeError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .processExited(let code, let stderr):
-            "Le processus Python s'est arrete (code \(code)): \(stderr)"
+            String(localized: "Python process exited (code \(code)): \(stderr)")
         case .pythonNotFound(let path):
-            "Python introuvable: \(path)"
+            String(localized: "Python not found: \(path)")
         case .scriptNotFound(let path):
-            "Script introuvable: \(path)"
+            String(localized: "Script not found: \(path)")
         }
     }
 }
@@ -25,9 +25,24 @@ final class PythonBridge {
 
     private var process: Process?
 
-    // Paths configurables
-    static let defaultPythonPath = "/Users/pierre/Projets/transcription/.venv/bin/python"
-    static let defaultScriptPath = "/Users/pierre/Projets/transcription/transcribe_bridge.py"
+    // Paths configurables — default to managed Application Support locations
+    static let defaultPythonPath: String = {
+        let appSupport = FileManager.default.urls(
+            for: .applicationSupportDirectory, in: .userDomainMask
+        ).first!
+        return appSupport
+            .appendingPathComponent("Voxa/.venv/bin/python")
+            .path
+    }()
+
+    static let defaultScriptPath: String = {
+        let appSupport = FileManager.default.urls(
+            for: .applicationSupportDirectory, in: .userDomainMask
+        ).first!
+        return appSupport
+            .appendingPathComponent("Voxa/Scripts/transcribe_bridge.py")
+            .path
+    }()
 
     func transcribe(
         audioPath: String,
@@ -86,8 +101,11 @@ final class PythonBridge {
                 var env = ProcessInfo.processInfo.environment
                 env["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"
                 env["PYTHONUNBUFFERED"] = "1"
-                // Ajouter les chemins courants au PATH pour que ffmpeg soit trouvable
-                let extraPaths = "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin"
+                // Add Voxa bin directory and common paths so ffmpeg is discoverable
+                let voxaBin = FileManager.default.urls(
+                    for: .applicationSupportDirectory, in: .userDomainMask
+                ).first!.appendingPathComponent("Voxa/bin").path
+                let extraPaths = "\(voxaBin):/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin"
                 if let currentPath = env["PATH"] {
                     env["PATH"] = extraPaths + ":" + currentPath
                 } else {

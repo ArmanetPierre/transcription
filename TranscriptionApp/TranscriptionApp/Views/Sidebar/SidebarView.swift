@@ -40,7 +40,7 @@ struct SidebarView: View {
                     )
                         .tag(project)
                         .contextMenu {
-                            Button("Supprimer", role: .destructive) {
+                            Button("Delete", role: .destructive) {
                                 if selection == project { selection = nil }
                                 modelContext.delete(project)
                             }
@@ -55,14 +55,14 @@ struct SidebarView: View {
                 }
             }
         }
-        .searchable(text: $viewModel.searchText, prompt: "Rechercher...")
+        .searchable(text: $viewModel.searchText, prompt: "Search...")
         .navigationTitle("Voxa")
         .toolbar {
             ToolbarItem {
                 Button {
                     viewModel.isImporting = true
                 } label: {
-                    Label("Importer", systemImage: "plus")
+                    Label("Import", systemImage: "plus")
                 }
             }
         }

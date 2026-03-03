@@ -6,6 +6,8 @@ struct TranscriptionApp: App {
     let modelContainer: ModelContainer
     @State private var listVM = TranscriptionListVM()
     @State private var recordingVM = RecordingVM()
+    @State private var dependencyManager = DependencyManager()
+    @AppStorage("setup_completed") private var setupCompleted = false
 
     init() {
         // Creer le ModelContainer explicitement pour le partager
@@ -24,10 +26,25 @@ struct TranscriptionApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(listVM: listVM)
-                .onAppear {
-                    recordingVM.modelContainer = modelContainer
+            Group {
+                if setupCompleted {
+                    ContentView(listVM: listVM)
+                        .onAppear {
+                            recordingVM.modelContainer = modelContainer
+                        }
+                        .task {
+                            // Silent re-check: if venv was deleted, go back to setup
+                            await dependencyManager.checkAll()
+                            if !dependencyManager.overallReady {
+                                setupCompleted = false
+                            }
+                        }
+                } else {
+                    SetupView(manager: dependencyManager) {
+                        setupCompleted = true
+                    }
                 }
+            }
         }
         .modelContainer(modelContainer)
 

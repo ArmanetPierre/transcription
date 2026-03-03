@@ -11,7 +11,7 @@ struct ImportDropZone: View {
                 .font(.title2)
                 .foregroundStyle(isTargeted ? .blue : .secondary)
 
-            Text("Deposer des fichiers audio")
+            Text("Drop audio files")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }

@@ -18,7 +18,7 @@ struct SpeakerSynthesisView: View {
                         .font(.title3)
                         .foregroundStyle(.purple)
 
-                    Text("Syntheses")
+                    Text("Summaries")
                         .font(.title3.bold())
 
                     Text("\(summaries.count) speakers")
@@ -62,7 +62,7 @@ struct SpeakerSynthesisView: View {
                             Image(systemName: expandedSpeakers.count == summaries.count
                                   ? "chevron.up.2" : "chevron.down.2")
                                 .font(.caption2)
-                            Text(expandedSpeakers.count == summaries.count ? "Replier" : "Deplier")
+                            Text(expandedSpeakers.count == summaries.count ? "Collapse" : "Expand")
                                 .font(.caption)
                         }
                         .foregroundStyle(Color.accentColor)

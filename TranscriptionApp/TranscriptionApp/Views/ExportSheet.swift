@@ -8,7 +8,7 @@ struct ExportSheet: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            Text("Exporter la transcription")
+            Text("Export Transcription")
                 .font(.title2.bold())
 
             Picker("Format", selection: $selectedFormat) {
@@ -19,7 +19,7 @@ struct ExportSheet: View {
             .pickerStyle(.segmented)
 
             // Preview
-            GroupBox("Apercu") {
+            GroupBox("Preview") {
                 ScrollView {
                     Text(preview)
                         .font(.system(.body, design: .monospaced))
@@ -30,12 +30,12 @@ struct ExportSheet: View {
             .frame(height: 200)
 
             HStack {
-                Button("Annuler") { dismiss() }
+                Button("Cancel") { dismiss() }
                     .keyboardShortcut(.cancelAction)
 
                 Spacer()
 
-                Button("Enregistrer...") {
+                Button("Save...") {
                     saveFile()
                 }
                 .buttonStyle(.borderedProminent)
@@ -53,7 +53,7 @@ struct ExportSheet: View {
         // Montrer seulement les 20 premieres lignes
         let lines = full.components(separatedBy: "\n")
         if lines.count > 20 {
-            preview = lines.prefix(20).joined(separator: "\n") + "\n\n... (\(lines.count) lignes au total)"
+            preview = lines.prefix(20).joined(separator: "\n") + "\n\n... (\(lines.count) lines total)"
         } else {
             preview = full
         }

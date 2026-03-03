@@ -57,7 +57,7 @@ struct MeetingReportView: View {
                         .font(.title3)
                         .foregroundStyle(.purple)
 
-                    Text("Compte rendu")
+                    Text("Meeting Report")
                         .font(.title3.bold())
                         .foregroundStyle(.primary)
                         .padding(.leading, 8)

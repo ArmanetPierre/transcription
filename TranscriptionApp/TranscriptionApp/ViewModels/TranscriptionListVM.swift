@@ -128,13 +128,19 @@ final class TranscriptionListVM {
         estimationService.startTracking()
 
         let hfToken = UserDefaults.standard.string(forKey: "hf_token") ?? ""
+        let pythonPath = UserDefaults.standard.string(forKey: "python_path")
+            ?? PythonBridge.defaultPythonPath
+        let scriptPath = UserDefaults.standard.string(forKey: "script_path")
+            ?? PythonBridge.defaultScriptPath
 
         let stream = bridge.transcribe(
             audioPath: project.audioFilePath,
             model: WhisperModel(rawValue: project.whisperModel) ?? .largeV3Turbo,
             language: project.language,
             diarize: project.diarizationEnabled,
-            hfToken: hfToken
+            hfToken: hfToken,
+            pythonPath: pythonPath,
+            scriptPath: scriptPath
         )
 
         var messageCount = 0
@@ -265,7 +271,7 @@ final class TranscriptionListVM {
                     // Le processus s'est termine sans produire de segments
                     print("[ListVM] ALERTE: stream termine sans .result et 0 segments → failed")
                     project.status = .failed
-                    project.errorMessage = "La transcription s'est terminee sans produire de resultats. Verifiez le fichier audio."
+                    project.errorMessage = String(localized: "Transcription completed without producing results. Check the audio file.")
                 } else {
                     print("[ListVM] Stream termine sans .result mais \(project.segments.count) segments existants → completed")
                     project.status = .completed

@@ -24,7 +24,7 @@ struct SegmentRow: View {
             // Speaker badge
             SpeakerBadge(
                 name: speakerDisplayName,
-                label: segment.speakerLabel ?? "Inconnu",
+                label: segment.speakerLabel ?? "Unknown",
                 onTap: {
                     renameText = speakerDisplayName == (segment.speakerLabel ?? "") ? "" : speakerDisplayName
                     showRenamePopover = true
@@ -32,9 +32,9 @@ struct SegmentRow: View {
             )
             .popover(isPresented: $showRenamePopover) {
                 VStack(spacing: 8) {
-                    Text("Renommer \(segment.speakerLabel ?? "")")
+                    Text("Rename \(segment.speakerLabel ?? "")")
                         .font(.headline)
-                    TextField("Nom du speaker", text: $renameText)
+                    TextField("Speaker name", text: $renameText)
                         .textFieldStyle(.roundedBorder)
                         .frame(width: 200)
                         .onSubmit {
@@ -42,7 +42,7 @@ struct SegmentRow: View {
                             showRenamePopover = false
                         }
                     HStack {
-                        Button("Annuler") { showRenamePopover = false }
+                        Button("Cancel") { showRenamePopover = false }
                         Button("OK") {
                             onRenameSpeaker(renameText)
                             showRenamePopover = false

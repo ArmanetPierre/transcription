@@ -42,13 +42,13 @@ final class RecordingVM {
 
             if recordingService.microphonePermission == .denied {
                 showPermissionAlert = true
-                permissionAlertMessage = "L'acces au microphone est requis.\n\nAllez dans Reglages Systeme > Confidentialite et securite > Microphone et activez Voxa."
+                permissionAlertMessage = String(localized: "Microphone access is required.\n\nGo to System Settings > Privacy & Security > Microphone and enable Voxa.")
                 return
             }
 
             if recordingService.systemAudioPermission == .denied {
                 showPermissionAlert = true
-                permissionAlertMessage = "La capture audio systeme est requise pour enregistrer les participants.\n\nAllez dans Reglages Systeme > Confidentialite et securite > Enregistrement de l'ecran et de l'audio systeme et activez Voxa."
+                permissionAlertMessage = String(localized: "System audio capture is required to record participants.\n\nGo to System Settings > Privacy & Security > Screen & System Audio Recording and enable Voxa.")
                 return
             }
 

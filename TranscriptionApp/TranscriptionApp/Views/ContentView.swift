@@ -16,9 +16,9 @@ struct ContentView: View {
                 )
             } else {
                 ContentUnavailableView(
-                    "Aucune transcription selectionnee",
+                    "No transcription selected",
                     systemImage: "waveform",
-                    description: Text("Importez un fichier audio ou selectionnez une transcription existante.")
+                    description: Text("Import an audio file or select an existing transcription.")
                 )
             }
         }

@@ -12,14 +12,14 @@ enum TranscriptionStatus: String, Codable, CaseIterable {
 
     var label: String {
         switch self {
-        case .pending: "En attente"
-        case .transcribing: "Transcription..."
-        case .diarizing: "Diarisation..."
-        case .merging: "Attribution speakers..."
-        case .awaitingSpeakerNames: "Identification des speakers"
-        case .generatingSummary: "Generation de la synthese..."
-        case .completed: "Termine"
-        case .failed: "Erreur"
+        case .pending: String(localized: "Pending")
+        case .transcribing: String(localized: "Transcribing...")
+        case .diarizing: String(localized: "Diarizing...")
+        case .merging: String(localized: "Assigning speakers...")
+        case .awaitingSpeakerNames: String(localized: "Speaker identification")
+        case .generatingSummary: String(localized: "Generating summary...")
+        case .completed: String(localized: "Completed")
+        case .failed: String(localized: "Error")
         }
     }
 
@@ -43,12 +43,12 @@ enum WhisperModel: String, CaseIterable, Identifiable {
 
     var displayName: String {
         switch self {
-        case .tiny: "Tiny (rapide, qualite basse)"
+        case .tiny: String(localized: "Tiny (fast, low quality)")
         case .base: "Base"
         case .small: "Small"
         case .medium: "Medium"
-        case .largeV3: "Large v3 (meilleure qualite)"
-        case .largeV3Turbo: "Large v3 Turbo (recommande)"
+        case .largeV3: String(localized: "Large v3 (best quality)")
+        case .largeV3Turbo: String(localized: "Large v3 Turbo (recommended)")
         }
     }
 }
@@ -60,9 +60,9 @@ enum ExportFormat: String, CaseIterable, Identifiable {
 
     var displayName: String {
         switch self {
-        case .txt: "Texte (.txt)"
+        case .txt: String(localized: "Text (.txt)")
         case .json: "JSON (.json)"
-        case .srt: "Sous-titres (.srt)"
+        case .srt: String(localized: "Subtitles (.srt)")
         case .md: "Markdown (.md)"
         }
     }

@@ -7,113 +7,128 @@ struct SettingsView: View {
     @AppStorage("script_path") private var scriptPath = PythonBridge.defaultScriptPath
     @AppStorage("default_diarization") private var defaultDiarization = true
     @AppStorage("ollama_model") private var ollamaModel = OllamaModel.llama3_1.rawValue
+    @AppStorage("setup_completed") private var setupCompleted = true
 
     @State private var ollamaStatus: OllamaStatus = .unknown
+    @State private var isReinstallingPackages = false
+    @State private var reinstallLog = ""
 
     var body: some View {
         Form {
             Section("HuggingFace") {
-                SecureField("Token HuggingFace", text: $hfToken)
-                    .help("Requis pour telecharger les modeles pyannote (diarisation)")
-                Text("Creez un token sur huggingface.co/settings/tokens")
+                SecureField("HuggingFace Token", text: $hfToken)
+                    .help("Required for downloading pyannote models (diarization)")
+                Text("Create a token at huggingface.co/settings/tokens")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
 
             Section("Transcription") {
-                Picker("Modele par defaut", selection: $defaultModel) {
+                Picker("Default model", selection: $defaultModel) {
                     ForEach(WhisperModel.allCases) { model in
                         Text(model.displayName).tag(model.rawValue)
                     }
                 }
 
-                Toggle("Diarisation par defaut", isOn: $defaultDiarization)
-                    .help("Identifier automatiquement les differents interlocuteurs")
+                Toggle("Default diarization", isOn: $defaultDiarization)
+                    .help("Automatically identify different speakers")
             }
 
-            Section("Synthese LLM (Ollama)") {
-                Picker("Modele Ollama", selection: $ollamaModel) {
+            Section("LLM Summary (Ollama)") {
+                Picker("Ollama Model", selection: $ollamaModel) {
                     ForEach(OllamaModel.allCases) { model in
                         Text(model.displayName).tag(model.rawValue)
                     }
                 }
-                .help("Modele utilise pour generer les syntheses par speaker")
+                .help("Model used to generate speaker summaries")
 
                 HStack(spacing: 8) {
                     switch ollamaStatus {
                     case .unknown:
                         Image(systemName: "questionmark.circle")
                             .foregroundStyle(.secondary)
-                        Text("Statut inconnu")
+                        Text("Unknown status")
                             .foregroundStyle(.secondary)
                     case .checking:
                         ProgressView()
                             .controlSize(.small)
-                        Text("Verification...")
+                        Text("Checking...")
                             .foregroundStyle(.secondary)
                     case .available:
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundStyle(.green)
-                        Text("Ollama disponible")
+                        Text("Ollama available")
                     case .unavailable:
                         Image(systemName: "xmark.circle.fill")
                             .foregroundStyle(.red)
-                        Text("Ollama non disponible")
+                        Text("Ollama unavailable")
                     }
 
                     Spacer()
 
-                    Button("Verifier") {
+                    Button("Check") {
                         checkOllama()
                     }
                     .controlSize(.small)
                 }
                 .font(.caption)
 
-                Text("Lancez 'ollama serve' pour activer la synthese automatique")
+                Text("Run 'ollama serve' to enable automatic summaries")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
 
-            Section("Chemins Python") {
-                HStack {
-                    TextField("Python", text: $pythonPath)
-                        .textFieldStyle(.roundedBorder)
-                    Button("Parcourir") {
-                        let panel = NSOpenPanel()
-                        panel.canChooseFiles = true
-                        panel.canChooseDirectories = false
-                        if panel.runModal() == .OK, let url = panel.url {
-                            pythonPath = url.path
-                        }
-                    }
-                }
-
-                HStack {
-                    TextField("Script", text: $scriptPath)
-                        .textFieldStyle(.roundedBorder)
-                    Button("Parcourir") {
-                        let panel = NSOpenPanel()
-                        panel.canChooseFiles = true
-                        panel.canChooseDirectories = false
-                        panel.allowedContentTypes = [.pythonScript]
-                        if panel.runModal() == .OK, let url = panel.url {
-                            scriptPath = url.path
-                        }
-                    }
-                }
-
-                // Status check
+            Section("Setup") {
                 HStack {
                     if FileManager.default.fileExists(atPath: pythonPath) {
                         Image(systemName: "checkmark.circle.fill").foregroundStyle(.green)
-                        Text("Python trouve")
+                        Text("Python found")
                     } else {
                         Image(systemName: "xmark.circle.fill").foregroundStyle(.red)
-                        Text("Python introuvable")
+                        Text("Python not found")
                     }
+                    Spacer()
+                    Button("Re-run Setup") {
+                        setupCompleted = false
+                    }
+                    .controlSize(.small)
                 }
                 .font(.caption)
+
+                DisclosureGroup("Advanced") {
+                    HStack {
+                        TextField("Python", text: $pythonPath)
+                            .textFieldStyle(.roundedBorder)
+                        Button("Browse") {
+                            let panel = NSOpenPanel()
+                            panel.canChooseFiles = true
+                            panel.canChooseDirectories = false
+                            if panel.runModal() == .OK, let url = panel.url {
+                                pythonPath = url.path
+                            }
+                        }
+                    }
+
+                    HStack {
+                        TextField("Script", text: $scriptPath)
+                            .textFieldStyle(.roundedBorder)
+                        Button("Browse") {
+                            let panel = NSOpenPanel()
+                            panel.canChooseFiles = true
+                            panel.canChooseDirectories = false
+                            panel.allowedContentTypes = [.pythonScript]
+                            if panel.runModal() == .OK, let url = panel.url {
+                                scriptPath = url.path
+                            }
+                        }
+                    }
+
+                    Button("Reset to defaults") {
+                        pythonPath = PythonBridge.defaultPythonPath
+                        scriptPath = PythonBridge.defaultScriptPath
+                    }
+                    .controlSize(.small)
+                }
             }
         }
         .formStyle(.grouped)

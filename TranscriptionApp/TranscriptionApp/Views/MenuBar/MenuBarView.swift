@@ -17,7 +17,7 @@ struct MenuBarView: View {
                 processingSection(project: project)
             } else {
                 // Idle
-                Label("Aucune transcription en cours", systemImage: "checkmark.circle")
+                Label("No transcription in progress", systemImage: "checkmark.circle")
                     .font(.callout)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 8)
@@ -26,7 +26,7 @@ struct MenuBarView: View {
             if !listVM.batchQueue.isEmpty {
                 Divider()
                 Label(
-                    "\(listVM.batchQueue.count) fichier\(listVM.batchQueue.count > 1 ? "s" : "") en attente",
+                    "\(listVM.batchQueue.count) file\(listVM.batchQueue.count > 1 ? "s" : "") pending",
                     systemImage: "tray.full"
                 )
                 .font(.caption)
@@ -42,7 +42,7 @@ struct MenuBarView: View {
                 Button {
                     listVM.cancelCurrent()
                 } label: {
-                    Label("Annuler", systemImage: "xmark.circle")
+                    Label("Cancel", systemImage: "xmark.circle")
                 }
                 .padding(.horizontal, 12)
                 .padding(.vertical, 4)
@@ -55,14 +55,14 @@ struct MenuBarView: View {
                     window.makeKeyAndOrderFront(nil)
                 }
             } label: {
-                Label("Ouvrir Voxa", systemImage: "macwindow")
+                Label("Open Voxa", systemImage: "macwindow")
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 4)
 
             Divider()
 
-            Button("Quitter") {
+            Button("Quit") {
                 NSApp.terminate(nil)
             }
             .padding(.horizontal, 12)
