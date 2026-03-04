@@ -29,7 +29,7 @@ Native macOS application (SwiftUI) for audio transcription with speaker identifi
 
 ### Quick Install (recommended)
 
-1. Download `Voxa.dmg` from [Releases](https://github.com/ArmanetPierre/transcription/releases)
+1. Download `Voxa.dmg` from [Releases](https://github.com/ArmanetPierre/Local-Transcription-Mac/releases)
 2. Open the DMG and drag **Voxa** to **Applications**
 3. Launch Voxa — the setup wizard will guide you through the rest
 4. Enter your HuggingFace token when prompted
@@ -85,7 +85,7 @@ ollama pull llama3.1:8b
 ## Build from source
 
 ```bash
-git clone https://github.com/ArmanetPierre/transcription.git
+git clone https://github.com/ArmanetPierre/Local-Transcription-Mac.git
 cd transcription
 ```
 
